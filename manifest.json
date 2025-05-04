@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "Gemini Bid Generator (Debug v1.2)",
+  "version": "1.2",
+  "description": "Generates a structured project bid using Gemini based on the job description. Includes enhanced logging.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "*://*.freelancer.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+
+      "matches": ["*://*.freelancer.com/projects/*"],
+
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "images/icon16.png",
+      "48": "images/icon48.png",
+      "128": "images/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "images/icon16.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
+  },
+  "options_page": "options.html"
+}

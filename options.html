@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gemini Bidder Options</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            padding: 30px 40px; /* More padding */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 600px; /* Limit width for readability */
+            margin: 20px auto; /* Center the content area */
+            background-color: #f8f9fa;
+            color: #333;
+            border: 1px solid #dee2e6; /* Subtle border */
+            border-radius: 8px; /* Rounded corners for the container */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Soft shadow */
+        }
+        h1 {
+            color: #1a73e8;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 24px;
+            text-align: center;
+            border-bottom: 1px solid #dee2e6; /* Separator line */
+            padding-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px; /* Space below label */
+            font-weight: 600; /* Bolder labels */
+            font-size: 15px;
+            color: #495057; /* Darker grey for labels */
+        }
+        input[type="password"],
+        input[type="text"] {
+            width: 100%;
+            padding: 10px 12px; /* Comfortable padding */
+            margin-bottom: 20px; /* More space below input */
+            box-sizing: border-box; /* Include padding and border in width */
+            border: 1px solid #ced4da; /* Standard border */
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        input[type="password"]:focus,
+        input[type="text"]:focus {
+            border-color: #80bdff; /* Blue border on focus */
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Blue glow on focus */
+        }
+        button {
+            padding: 10px 20px; /* More horizontal padding */
+            cursor: pointer;
+            background-color: #28a745; /* Green for save button */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 15px;
+            font-weight: 500;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        button:hover {
+            background-color: #218838; /* Darker green on hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        #status {
+            margin-top: 20px;
+            font-weight: 500;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 14px;
+            min-height: 20px; /* Ensure space even when empty */
+            display: none; /* Hidden by default */
+        }
+        /* Status message styling */
+        #status.success { background-color: #d4edda; color: #155724; display: block; }
+        #status.error   { background-color: #f8d7da; color: #721c24; display: block; }
+        #status.info    { background-color: #e2e3e5; color: #383d41; display: block; }
+
+        .info-text {
+            font-size: 13px;
+            margin-top: 25px;
+            color: #6c757d; /* Grey info text */
+            text-align: center;
+            line-height: 1.6;
+        }
+        .info-text a {
+            color: #007bff; /* Standard link blue */
+            text-decoration: none;
+        }
+        .info-text a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gemini Bidder Settings</h1>
+
+    <label for="apiKey">Gemini API Key:</label>
+    <input type="password" id="apiKey" placeholder="Enter your Google AI Studio API Key here">
+
+    <button id="saveBtn">Save API Key</button>
+
+    <div id="status"></div>
+
+    <p class="info-text">
+        You can generate a free API key from
+        <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer">Google AI Studio</a>.
+        <br>
+        Your key is stored securely using Chrome's synchronized storage and is not shared externally, except when making calls to the Google API.
+    </p>
+
+    <script src="options.js"></script>
+</body>
+</html>
