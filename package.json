@@ -1,0 +1,25 @@
+{
+  "name": "gemini-bidder-extension",
+  "version": "3.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 5173",
+    "postbuild": "rm -rf dist/images && mkdir -p dist/images && cp -R images/* dist/images/ && cp manifest.json dist/ && cp background.js dist/ && cp content.js dist/"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "@types/chrome": "^0.0.270",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.3.4"
+  }
+}
+
