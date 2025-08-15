@@ -30,22 +30,23 @@ async function getSettings() {
 
 // --- Utility: Infer specialization from job text ---
 function inferSpecialization(text) {
-    if (!text) return "software";
+    if (!text) return "full-stack";
     const lower = text.toLowerCase();
     const checks = [
-        { key: /\b(ai|machine learning|ml|bert|llm|generative ai|deep learning)\b/, label: "AI/ML" },
-        { key: /\b(data(\s|-)engineering|etl|data pipeline|analytics|pandas|numpy)\b/, label: "data" },
-        { key: /\b(nlp|text generation|transformer|hugging face)\b/, label: "NLP" },
-        { key: /\b(scrap|crawler|scraping|selenium|beautifulsoup)\b/, label: "web scraping" },
-        { key: /\b(firebase|gcp|aws|azure|cloud|serverless|vercel|cloud functions)\b/, label: "cloud" },
-        { key: /\b(react|next\.js|vue|tailwind|frontend|javascript|typescript)\b/, label: "frontend" },
-        { key: /\b(node\.|express|django|flask|fastapi|api|backend|rest|graphql)\b/, label: "backend" },
-        { key: /\b(matlab|signal processing|simulation|algorithm)\b/, label: "algorithm" },
+        { key: /\b(ai|machine learning|ml|bert|llm|generative ai|deep learning|artificial intelligence|chatbot|gpt|text generation|computer vision|opencv|nlp|natural language processing)\b/, label: "AI/ML specialist" },
+        { key: /\b(firebase|google cloud|gcp|aws|azure|cloud|serverless|vercel|cloud functions|hosting|deployment)\b/, label: "cloud solutions" },
+        { key: /\b(scrap|crawler|scraping|selenium|beautifulsoup|data extraction|web scraping|automation|bot)\b/, label: "web scraping and automation" },
+        { key: /\b(react|next\.js|vue|angular|tailwind|frontend|javascript|typescript|html|css|ui|ux)\b/, label: "frontend" },
+        { key: /\b(python|django|flask|fastapi|node\.js|express|php|backend|api|rest|graphql|database|postgresql|mysql)\b/, label: "backend" },
+        { key: /\b(chrome extension|browser extension|extension development)\b/, label: "browser extension" },
+        { key: /\b(matlab|algorithm|optimization|mathematical modeling|simulation|data analysis|statistics)\b/, label: "algorithm and data science" },
+        { key: /\b(mobile|android|ios|react native|flutter|app development)\b/, label: "mobile development" },
+        { key: /\b(docker|kubernetes|ci\/cd|devops|linux|system administration)\b/, label: "DevOps" },
     ];
     for (const c of checks) {
         if (c.key.test(lower)) return c.label;
     }
-    return "software";
+    return "full-stack";
 }
 
 // --- Prompt helpers ---
@@ -53,28 +54,34 @@ function buildPrompt(description) {
     const specialization = inferSpecialization(description);
 
     const REVIEW_HIGHLIGHTS = [
-        "Talented, great communicator; highly recommended.",
-        "Delivered exactly what I was looking for on time and on budget.",
-        "Quality work within budget and on time; very professional.",
-        "Finished ahead of schedule and helped me after delivery.",
-        "Knows his stuff; accurate work and excellent communication.",
-        "Outstanding job, quick responses, implemented feedback immediately.",
+        "Reda E is very talented and a great communicator; highly recommended by clients worldwide.",
+        "Delivered exactly what was needed on time and on budget with 5.0 rating across 48+ projects.",
+        "Professional work with excellent communication; knows his stuff and gets the job done efficiently.",
+        "Finished ahead of schedule and provided ongoing support; very accommodating and helpful.",
+        "Outstanding job with quick responses and immediate feedback implementation.",
+        "Exceeded expectations with accurate work and clear documentation throughout the project.",
+        "Intelligent, quick, responsible developer with great vision and technical knowledge.",
     ].join("\n- ");
 
-    return `You write concise, human-sounding bids that do NOT feel AI-generated.
+    return `You write concise, human-sounding bids that showcase proven expertise without feeling AI-generated.
+
+Professional Context: 
+- 5.0-star rated full-stack developer with 48+ successful projects
+- Expertise spans AI/ML, cloud platforms (Firebase, AWS, GCP), web development, automation, and data solutions
+- Strong track record with international clients from US, UK, Australia, Germany, and more
+- Known for delivering on-time, professional communication, and going above expectations
 
 Constraints:
 - Write 3 to 6 lines total (no bullets, no headings, no emojis, no signature).
-- Use first person, confident but friendly. Avoid generic AI phrases (e.g., "As an AI", "I can do it perfectly").
-- Start the first line exactly with: "I'm a ${specialization} engineer" followed by one short clause about fit.
-- Add 2–3 lines with a concrete technical approach referencing relevant tech from the job details.
-- Close with: "Please check my profile and reviews."
+- Use first person, confident but professional tone. Reference relevant past experience naturally.
+- Start with: "I'm a ${specialization} developer with 5+ years of experience and a 5.0 rating on similar projects."
+- Add 2–3 lines mentioning specific technical approach and relevant technologies from your expertise.
+- Close with: "Please review my portfolio and client feedback - I'd be happy to discuss your requirements."
 
-Context:
-Job details:
+Project details:
 ${description}
 
-Selected review highlights (do not quote verbatim—use to shape the tone):
+Professional reputation (use to shape tone, don't quote directly):
 - ${REVIEW_HIGHLIGHTS}
 `;
 }
@@ -82,15 +89,18 @@ Selected review highlights (do not quote verbatim—use to shape the tone):
 // --- Prompt for clarifying questions ---
 function buildQuestionsPrompt(description) {
     const specialization = inferSpecialization(description);
-    return `You are an experienced ${specialization} engineer preparing to bid for a project.
+    return `You are an experienced ${specialization} developer with a 5.0 rating and proven track record of delivering successful projects.
 
-Write 3 to 5 concise clarifying questions (each as one short sentence) to ensure scope, success criteria, and constraints are clear.
-Rules:
-- Keep it human, practical, and not generic.
-- Avoid repeating information already stated.
-- No numbering markers like 1) or bullets; just separate lines.
+Write 3 to 5 professional clarifying questions that demonstrate technical understanding and help ensure project success.
 
-Project brief:
+Guidelines:
+- Questions should show expertise in the relevant technology stack
+- Focus on technical implementation details, scope boundaries, and success criteria
+- Avoid generic questions - be specific to the project type and requirements
+- Keep each question concise and professional
+- No numbering or bullets - just separate lines
+
+Project details:
 ${description}`;
 }
 
@@ -103,17 +113,6 @@ async function generateBidWithGemini(description) {
 
     const API_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(geminiModel)}:generateContent`;
 
-    const specialization = inferSpecialization(description);
-
-    const REVIEW_HIGHLIGHTS = [
-        "Talented, great communicator; highly recommended.",
-        "Delivered exactly what I was looking for on time and on budget.",
-        "Quality work within budget and on time; very professional.",
-        "Finished ahead of schedule and helped me after delivery.",
-        "Knows his stuff; accurate work and excellent communication.",
-        "Outstanding job, quick responses, implemented feedback immediately.",
-    ].join("\n- ");
-
     const prompt = buildPrompt(description);
 
     console.log("Background: Sending request to Gemini API...");
@@ -124,7 +123,22 @@ async function generateBidWithGemini(description) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 contents: [{ parts: [{ text: prompt }] }],
-                // Generation and safety settings are also omitted for brevity.
+                generationConfig: {
+                    temperature: 0.7,
+                    topK: 40,
+                    topP: 0.95,
+                    maxOutputTokens: 1024,
+                },
+                safetySettings: [
+                    {
+                        category: "HARM_CATEGORY_HARASSMENT",
+                        threshold: "BLOCK_MEDIUM_AND_ABOVE"
+                    },
+                    {
+                        category: "HARM_CATEGORY_HATE_SPEECH",
+                        threshold: "BLOCK_MEDIUM_AND_ABOVE"
+                    }
+                ]
             }),
         });
 

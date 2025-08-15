@@ -3,3 +3,7 @@ dist/
 build/
 *.log
 *.env
+.DS_Store
+*.zip
+*.crx
+*.pem

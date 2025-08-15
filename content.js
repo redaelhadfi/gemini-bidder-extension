@@ -172,13 +172,88 @@ function fillBidForm(bidData) {
         return false;
     };
 
+    const clickElement = (selector, description) => {
+        const element = document.querySelector(selector);
+        if (element) {
+            element.click();
+            console.log(`[Content] Successfully clicked ${description}.`);
+            return true;
+        }
+        console.warn(`[Content] Could not find ${description} element: '${selector}'.`);
+        return false;
+    };
+
     let success = setInputValue('textarea#descriptionTextArea', bidData.bidText);
     setInputValue('input#bidAmountInput', bidData.bidAmount);
     setInputValue('input#periodInput', bidData.deliveryTime);
 
-    // Handle checkboxes if upgrade data is provided
+    // Handle bid upgrades if provided
     if (bidData.upgrades) {
-        // This logic can be expanded if needed
+        // Handle sealed bid upgrade
+        if (bidData.upgrades.sealed) {
+            // Try multiple selectors for sealed bid checkbox/button
+            const sealedSelectors = [
+                'fl-upgrade-tag[data-upgrade-type="sealed"]',
+                '[data-upgrade-type="sealed"]',
+                'input[type="checkbox"][name*="sealed"]',
+                '.UpgradeItem input[type="checkbox"]'
+            ];
+            
+            for (const selector of sealedSelectors) {
+                if (clickElement(selector, 'sealed bid upgrade')) {
+                    break;
+                }
+            }
+        }
+
+        // Handle sponsored bid upgrade
+        if (bidData.upgrades.sponsored) {
+            const sponsoredSelectors = [
+                'fl-upgrade-tag[data-upgrade-type="sponsored"]',
+                '[data-upgrade-type="sponsored"]',
+                'input[type="checkbox"][name*="sponsored"]'
+            ];
+            
+            for (const selector of sponsoredSelectors) {
+                if (clickElement(selector, 'sponsored bid upgrade')) {
+                    break;
+                }
+            }
+        }
+
+        // Handle highlight bid upgrade
+        if (bidData.upgrades.highlight) {
+            const highlightSelectors = [
+                'fl-upgrade-tag[data-upgrade-type="highlight"]',
+                '[data-upgrade-type="highlight"]',
+                'input[type="checkbox"][name*="highlight"]'
+            ];
+            
+            for (const selector of highlightSelectors) {
+                if (clickElement(selector, 'highlight bid upgrade')) {
+                    break;
+                }
+            }
+        }
+    }
+
+    // Auto-place bid if requested
+    if (bidData.autoSubmit) {
+        setTimeout(() => {
+            const placeBidSelectors = [
+                'fl-button[fltrackinglabel="PlaceBidButton"] button',
+                'button:contains("Place Bid")',
+                '.BidFormBtn button',
+                'button[type="submit"]'
+            ];
+            
+            for (const selector of placeBidSelectors) {
+                if (clickElement(selector, 'place bid button')) {
+                    console.log('[Content] Bid submitted automatically.');
+                    break;
+                }
+            }
+        }, 1000); // Small delay to ensure form is populated
     }
 
     return success;
